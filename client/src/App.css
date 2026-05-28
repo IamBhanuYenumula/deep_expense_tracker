@@ -125,3 +125,8 @@ tbody tr:hover {
 .status.error {
   color: #c53030;
 }
+
+/* Highlight the table row whose data is currently loaded in the edit form */
+tr.editing td {
+  background-color: #fffbea;
+}
