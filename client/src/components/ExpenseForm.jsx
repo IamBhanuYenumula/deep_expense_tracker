@@ -12,24 +12,32 @@ function ExpenseForm({ onAdd }) {
   const [amount,      setAmount]      = useState('');
   const [date,        setDate]        = useState('');
   const [submitting,  setSubmitting]  = useState(false); // prevents double-submit
+  const [error,       setError]       = useState(null);
 
   async function handleSubmit(e) {
     e.preventDefault();        // IMPORTANT: stops the browser from reloading the page
     setSubmitting(true);
+    setError(null);
 
-    const newExpense = await createExpense({
-      description,
-      amount: Number(amount), // HTML inputs always return strings — convert to number
-      date,
-    });
+    try {
+      const newExpense = await createExpense({
+        description,
+        amount: Number(amount), // HTML inputs always return strings — convert to number
+        date,
+      });
 
-    onAdd(newExpense);   // tell App about the new expense so it can update the list
+      onAdd(newExpense);   // tell App about the new expense so it can update the list
 
-    // Clear the form for the next entry
-    setDescription('');
-    setAmount('');
-    setDate('');
-    setSubmitting(false);
+      // Clear the form for the next entry
+      setDescription('');
+      setAmount('');
+      setDate('');
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      // finally always runs — whether createExpense succeeded or threw
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -68,6 +76,8 @@ function ExpenseForm({ onAdd }) {
         <button type="submit" disabled={submitting}>
           {submitting ? 'Adding…' : 'Add Expense'}
         </button>
+
+        {error && <p className="status error">{error}</p>}
 
       </form>
     </section>

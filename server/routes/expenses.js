@@ -31,8 +31,12 @@ router.get('/:id', (req, res) => {
 
 router.post('/', (req, res) => {
   const { description, amount, category_id, date, notes } = req.body;
-  if (!description || !amount || !date) {
+  // Use explicit null/undefined check so amount=0 is accepted, not treated as missing
+  if (!description || amount == null || amount === '' || !date) {
     return res.status(400).json({ error: 'description, amount, and date are required' });
+  }
+  if (Number(amount) < 0) {
+    return res.status(400).json({ error: 'amount must be non-negative' });
   }
   const sql = `
     INSERT INTO expenses (description, amount, category_id, date, notes)
@@ -40,14 +44,27 @@ router.post('/', (req, res) => {
   `;
   db.run(sql, [description, amount, category_id || null, date, notes || null], function (err) {
     if (err) return res.status(500).json({ error: err.message });
-    res.status(201).json({ id: this.lastID, description, amount, category_id, date, notes });
+    // Re-read the full row so the response shape matches GET (includes created_at, category_name)
+    const fetchSql = `
+      SELECT e.*, c.name AS category_name
+      FROM expenses e
+      LEFT JOIN categories c ON e.category_id = c.id
+      WHERE e.id = ?
+    `;
+    db.get(fetchSql, [this.lastID], (err, row) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.status(201).json(row);
+    });
   });
 });
 
 router.put('/:id', (req, res) => {
   const { description, amount, category_id, date, notes } = req.body;
-  if (!description || !amount || !date) {
+  if (!description || amount == null || amount === '' || !date) {
     return res.status(400).json({ error: 'description, amount, and date are required' });
+  }
+  if (Number(amount) < 0) {
+    return res.status(400).json({ error: 'amount must be non-negative' });
   }
   const sql = `
     UPDATE expenses

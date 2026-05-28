@@ -1,7 +1,9 @@
 // All communication with the Express API lives here.
 // Components import these functions — they never write raw fetch() calls.
 
-const BASE_URL = 'http://localhost:3000';
+// Read the API URL from the Vite environment (set VITE_API_URL in client/.env).
+// Falls back to localhost:3000 so local dev works without a .env file.
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 // GET /expenses — returns an array of all expense objects
 export async function fetchExpenses() {
@@ -27,5 +29,6 @@ export async function deleteExpense(id) {
     method: 'DELETE',
   });
   if (!res.ok) throw new Error('Failed to delete expense');
-  return res.json();
+  // 204 No Content has no body — guard before calling .json() to avoid a parse error
+  return res.status !== 204 ? res.json() : null;
 }
