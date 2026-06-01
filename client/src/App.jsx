@@ -2,11 +2,12 @@
 // Think of it as the "main function" of the frontend.
 
 import { useState, useEffect } from 'react';
-import { fetchExpenses, fetchCategories, fetchRecurring } from './api';
+import { fetchExpenses, fetchCategories, fetchRecurring, BASE_URL } from './api';
 import { exportToCSV } from './utils/exportCSV';
 import ExpenseForm from './components/ExpenseForm';
 import ExpenseList from './components/ExpenseList';
 import RecurringSection from './components/RecurringSection';
+import PlaidConnect from './components/PlaidConnect';
 import Charts from './components/Charts';
 import './App.css';
 
@@ -38,6 +39,21 @@ function App() {
         setError(err.message);
         setLoading(false);
       });
+  }, []);
+
+  // --- SSE listener for real-time Plaid-imported expenses ---
+  // EventSource opens a persistent HTTP connection to /events.
+  // When the server broadcasts an 'expense' event (after a Plaid webhook),
+  // we prepend it to state so it appears instantly without a page refresh.
+  // The cleanup function closes the connection when the component unmounts.
+  useEffect(() => {
+    const source = new EventSource(`${BASE_URL}/events`);
+    source.addEventListener('expense', (e) => {
+      const expense = JSON.parse(e.data);
+      setExpenses(prev => [expense, ...prev]);
+    });
+    source.onerror = () => source.close(); // don't retry forever on error
+    return () => source.close();
   }, []);
 
   // --- Event handlers ---
@@ -170,6 +186,8 @@ function App() {
             onCategoryAdd={handleCategoryAdd}
           />
         )}
+
+        <PlaidConnect />
 
         {!loading && !error && <Charts expenses={expenses} />}
       </main>
