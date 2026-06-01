@@ -2,9 +2,10 @@
 // Think of it as the "main function" of the frontend.
 
 import { useState, useEffect } from 'react';
-import { fetchExpenses, fetchCategories } from './api';
+import { fetchExpenses, fetchCategories, fetchRecurring } from './api';
 import ExpenseForm from './components/ExpenseForm';
 import ExpenseList from './components/ExpenseList';
+import RecurringSection from './components/RecurringSection';
 import Charts from './components/Charts';
 import './App.css';
 
@@ -16,19 +17,20 @@ function App() {
   // expenses: the actual data once it arrives
   const [expenses,       setExpenses]       = useState([]);
   const [categories,     setCategories]     = useState([]);
+  const [recurring,      setRecurring]      = useState([]);
   const [loading,        setLoading]        = useState(true);
   const [error,          setError]          = useState(null);
   // null = form is in "add" mode; an expense object = form is in "edit" mode
   const [editingExpense, setEditingExpense] = useState(null);
 
   // --- Fetch on mount ---
-  // Promise.all fires both requests simultaneously (like asyncio.gather in Python)
-  // and waits until both resolve before setting state.
+  // All three requests fire simultaneously — none depends on another's result.
   useEffect(() => {
-    Promise.all([fetchExpenses(), fetchCategories()])
-      .then(([expenseData, categoryData]) => {
+    Promise.all([fetchExpenses(), fetchCategories(), fetchRecurring()])
+      .then(([expenseData, categoryData, recurringData]) => {
         setExpenses(expenseData);
         setCategories(categoryData);
+        setRecurring(recurringData);
         setLoading(false);
       })
       .catch(err => {
@@ -82,6 +84,32 @@ function App() {
     );
   }
 
+  // --- Recurring handlers ---
+  function handleRecurringAdd(item) {
+    // Keep list sorted by next_due (soonest first) — same order as the server returns
+    setRecurring(prev => [...prev, item].sort((a, b) => a.next_due.localeCompare(b.next_due)));
+  }
+
+  function handleRecurringDelete(id) {
+    setRecurring(prev => prev.filter(r => r.id !== id));
+  }
+
+  function handleRecurringUpdate(updated) {
+    setRecurring(prev =>
+      prev.map(r => r.id === updated.id ? updated : r)
+          .sort((a, b) => a.next_due.localeCompare(b.next_due))
+    );
+  }
+
+  // Called after a successful Log: prepend the new expense and update the recurring row
+  function handleRecurringLog({ expense, recurring: updatedRec }) {
+    setExpenses(prev => [expense, ...prev]);
+    setRecurring(prev =>
+      prev.map(r => r.id === updatedRec.id ? updatedRec : r)
+          .sort((a, b) => a.next_due.localeCompare(b.next_due))
+    );
+  }
+
   // --- Render ---
   const total = expenses.reduce((sum, e) => sum + Number(e.amount), 0);
 
@@ -120,6 +148,18 @@ function App() {
             />
           )}
         </section>
+
+        {!loading && !error && (
+          <RecurringSection
+            recurring={recurring}
+            categories={categories}
+            onAdd={handleRecurringAdd}
+            onDelete={handleRecurringDelete}
+            onUpdate={handleRecurringUpdate}
+            onLog={handleRecurringLog}
+            onCategoryAdd={handleCategoryAdd}
+          />
+        )}
 
         {!loading && !error && <Charts expenses={expenses} />}
       </main>

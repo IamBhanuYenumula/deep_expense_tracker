@@ -314,6 +314,82 @@ td.actions {
   padding-right: 16px;
 }
 
+/* ── Recurring expenses section ─────────────────── */
+
+.recurring-section {
+  margin-top: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Recurring list card — same card style as .list-section */
+.recurring-list {
+  background: var(--apple-bg-card);
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 4px 16px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+.recurring-list > h2 {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  color: var(--apple-text-primary);
+  margin: 0;
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid var(--apple-separator);
+  line-height: 1.2;
+}
+
+/* Frequency cell — pill label */
+td.frequency {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--apple-text-secondary);
+  text-transform: capitalize;
+}
+
+/* Due date — normal vs overdue */
+.due-date { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
+.due-date.overdue { color: var(--apple-red); font-weight: 500; }
+
+/* "Due" badge next to the date */
+.due-badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 2px 6px;
+  background: rgba(255, 59, 48, 0.10);
+  color: var(--apple-red);
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  vertical-align: middle;
+  letter-spacing: 0.3px;
+}
+
+/* Log button — teal when due, gray when not yet due */
+button.log-btn {
+  background: var(--apple-fill);
+  color: var(--apple-text-secondary);
+  padding: 6px 14px;
+  font-size: 13px;
+  border-radius: 16px;
+  margin-right: 6px;
+}
+
+button.log-btn.due {
+  background: var(--apple-green);
+  color: #FFFFFF;
+}
+
+button.log-btn:hover   { opacity: 0.80; }
+button.log-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+
 /* ── Charts section ─────────────────────────────── */
 
 .charts-section {
