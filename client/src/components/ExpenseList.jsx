@@ -45,6 +45,7 @@ function ExpenseList({ expenses, onDelete, onEdit, editingId }) {
             <th>Description</th>
             <th>Amount</th>
             <th>Date</th>
+            <th>Category</th>
             <th></th>{/* action buttons column */}
           </tr>
         </thead>
@@ -56,6 +57,7 @@ function ExpenseList({ expenses, onDelete, onEdit, editingId }) {
               <td>{exp.description}</td>
               <td className="amount">${Number(exp.amount).toFixed(2)}</td>
               <td>{exp.date}</td>
+              <td className="category">{exp.category_name ?? '—'}</td>
               <td className="actions">
                 {/* Disable Edit while a delete is in flight on this row */}
                 <button
