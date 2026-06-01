@@ -2,7 +2,7 @@
 // Think of it as the "main function" of the frontend.
 
 import { useState, useEffect } from 'react';
-import { fetchExpenses } from './api';
+import { fetchExpenses, fetchCategories } from './api';
 import ExpenseForm from './components/ExpenseForm';
 import ExpenseList from './components/ExpenseList';
 import './App.css';
@@ -14,18 +14,20 @@ function App() {
   // error:   did something go wrong?
   // expenses: the actual data once it arrives
   const [expenses,       setExpenses]       = useState([]);
+  const [categories,     setCategories]     = useState([]);
   const [loading,        setLoading]        = useState(true);
   const [error,          setError]          = useState(null);
   // null = form is in "add" mode; an expense object = form is in "edit" mode
   const [editingExpense, setEditingExpense] = useState(null);
 
   // --- Fetch on mount ---
-  // useEffect with [] runs once, after the component first appears on screen.
-  // This is where we load initial data from the API.
+  // Promise.all fires both requests simultaneously (like asyncio.gather in Python)
+  // and waits until both resolve before setting state.
   useEffect(() => {
-    fetchExpenses()
-      .then(data => {
-        setExpenses(data);
+    Promise.all([fetchExpenses(), fetchCategories()])
+      .then(([expenseData, categoryData]) => {
+        setExpenses(expenseData);
+        setCategories(categoryData);
         setLoading(false);
       })
       .catch(err => {
@@ -71,6 +73,14 @@ function App() {
     setEditingExpense(null);
   }
 
+  // Called by ExpenseForm after a new category is created inline.
+  // Inserts it into the sorted categories list so the dropdown stays alphabetical.
+  function handleCategoryAdd(newCategory) {
+    setCategories(prev =>
+      [...prev, newCategory].sort((a, b) => a.name.localeCompare(b.name))
+    );
+  }
+
   // --- Render ---
   const total = expenses.reduce((sum, e) => sum + Number(e.amount), 0);
 
@@ -90,6 +100,8 @@ function App() {
           editingExpense={editingExpense}
           onUpdate={handleUpdate}
           onCancelEdit={handleCancelEdit}
+          categories={categories}
+          onCategoryAdd={handleCategoryAdd}
         />
 
         <section className="list-section">

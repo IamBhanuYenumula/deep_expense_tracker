@@ -112,6 +112,46 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   cursor: pointer;
 }
 
+/* ── Category select — matches input fill style ── */
+
+select {
+  padding: 10px 36px 10px 14px; /* right padding makes room for the custom arrow */
+  border: none;
+  border-radius: 10px;
+  font-size: 17px;
+  font-family: var(--sans);
+  background-color: var(--apple-bg-page);
+  /* Custom chevron so appearance: none doesn't leave it arrowless */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238E8E93' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  color: var(--apple-text-primary);
+  outline: none;
+  cursor: pointer;
+  transition: box-shadow 0.15s ease, background-color 0.15s ease;
+  -webkit-appearance: none;
+  appearance: none;
+  flex: 1;
+  min-width: 140px;
+}
+
+select:focus {
+  background-color: #EAEAF0;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.20);
+}
+
+/* New-category text input — same flex sizing as the select it sits beside */
+input.new-category {
+  flex: 1;
+  min-width: 130px;
+}
+
+/* Category cell — muted, smaller than amounts */
+td.category {
+  font-size: 14px;
+  color: var(--apple-text-secondary);
+}
+
 /* ── Buttons ────────────────────────────────────── */
 
 button {

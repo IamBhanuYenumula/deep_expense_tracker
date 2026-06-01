@@ -44,3 +44,25 @@ export async function deleteExpense(id) {
   // 204 No Content has no body — guard before calling .json() to avoid a parse error
   return res.status !== 204 ? res.json() : null;
 }
+
+// GET /categories — returns an array of all category objects
+export async function fetchCategories() {
+  const res = await fetch(`${BASE_URL}/categories`);
+  if (!res.ok) throw new Error('Failed to fetch categories');
+  return res.json();
+}
+
+// POST /categories — creates a new category, returns the saved object (with its new id)
+// Surfaces the server's error message so "already exists" is shown to the user clearly.
+export async function createCategory(name) {
+  const res = await fetch(`${BASE_URL}/categories`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name }),
+  });
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error(body.error || 'Failed to create category');
+  }
+  return res.json();
+}
