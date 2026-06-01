@@ -13,9 +13,11 @@ function App() {
   // loading: are we still waiting for the server?
   // error:   did something go wrong?
   // expenses: the actual data once it arrives
-  const [expenses,  setExpenses]  = useState([]);
-  const [loading,   setLoading]   = useState(true);
-  const [error,     setError]     = useState(null);
+  const [expenses,       setExpenses]       = useState([]);
+  const [loading,        setLoading]        = useState(true);
+  const [error,          setError]          = useState(null);
+  // null = form is in "add" mode; an expense object = form is in "edit" mode
+  const [editingExpense, setEditingExpense] = useState(null);
 
   // --- Fetch on mount ---
   // useEffect with [] runs once, after the component first appears on screen.
@@ -48,15 +50,47 @@ function App() {
     // .filter() returns a NEW array — we never mutate the existing one directly.
   }
 
+  // Called by ExpenseList when the user clicks Edit on a row.
+  // Lifts the selected expense object into state — the form reads this to pre-fill its fields.
+  function handleStartEdit(expense) {
+    setEditingExpense(expense);
+  }
+
+  // Called by ExpenseForm after a successful PUT.
+  // Replaces the matching row in the array; every other row is unchanged.
+  // Python equivalent: [updated if e['id'] == id else e for e in expenses]
+  function handleUpdate(updatedExpense) {
+    setExpenses(prev =>
+      prev.map(exp => exp.id === updatedExpense.id ? updatedExpense : exp)
+    );
+    setEditingExpense(null); // return form to add mode
+  }
+
+  // Called by ExpenseForm when the user clicks Cancel.
+  function handleCancelEdit() {
+    setEditingExpense(null);
+  }
+
   // --- Render ---
+  const total = expenses.reduce((sum, e) => sum + Number(e.amount), 0);
+
   return (
     <div className="app">
       <header>
         <h1>Deep Expense Tracker</h1>
+        <p className="header-total">Total <span>${total.toFixed(2)}</span></p>
       </header>
 
       <main>
-        <ExpenseForm onAdd={handleAdd} />
+        {/* key tells React to fully remount ExpenseForm when the editing target changes,
+            so useState initial values always reflect the current editingExpense */}
+        <ExpenseForm
+          key={editingExpense?.id ?? 'new'}
+          onAdd={handleAdd}
+          editingExpense={editingExpense}
+          onUpdate={handleUpdate}
+          onCancelEdit={handleCancelEdit}
+        />
 
         <section className="list-section">
           <h2>All Expenses</h2>
@@ -68,6 +102,8 @@ function App() {
             <ExpenseList
               expenses={expenses}
               onDelete={handleDelete}
+              onEdit={handleStartEdit}
+              editingId={editingExpense?.id}
             />
           )}
         </section>

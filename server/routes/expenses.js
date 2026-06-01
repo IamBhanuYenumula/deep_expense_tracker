@@ -74,7 +74,17 @@ router.put('/:id', (req, res) => {
   db.run(sql, [description, amount, category_id || null, date, notes || null, req.params.id], function (err) {
     if (err) return res.status(500).json({ error: err.message });
     if (this.changes === 0) return res.status(404).json({ error: 'Expense not found' });
-    res.json({ id: Number(req.params.id), description, amount, category_id, date, notes });
+    // Re-read the full row so the response shape matches GET (includes category_name, created_at)
+    const fetchSql = `
+      SELECT e.*, c.name AS category_name
+      FROM expenses e
+      LEFT JOIN categories c ON e.category_id = c.id
+      WHERE e.id = ?
+    `;
+    db.get(fetchSql, [req.params.id], (fetchErr, row) => {
+      if (fetchErr) return res.status(500).json({ error: fetchErr.message });
+      res.json(row);
+    });
   });
 });
 

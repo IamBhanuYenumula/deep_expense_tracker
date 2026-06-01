@@ -6,21 +6,21 @@ import { deleteExpense } from '../api';
 
 // Props:
 //   expenses  — array of expense objects from the database
-//   onDelete  — callback function: onDelete(id) tells App to remove the item from state
-function ExpenseList({ expenses, onDelete }) {
-  // A Set of IDs currently being deleted — prevents double-clicks from firing two requests
+//   onDelete  — callback: onDelete(id) tells App to remove the item from state
+//   onEdit    — callback: onEdit(expense) tells App to set editingExpense (fills the form)
+//   editingId — the id of the expense currently being edited (used to highlight that row)
+function ExpenseList({ expenses, onDelete, onEdit, editingId }) {
   const [deleting, setDeleting] = useState(new Set());
   const [error,    setError]    = useState(null);
 
-  // Called when the user clicks Delete on a row
   async function handleDelete(id) {
-    if (deleting.has(id)) return;  // already in flight — ignore the second click
+    if (deleting.has(id)) return;
 
     setDeleting(prev => new Set(prev).add(id));
     setError(null);
     try {
       await deleteExpense(id);
-      onDelete(id);              // tell App to remove it from state (re-renders the table)
+      onDelete(id);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -32,7 +32,6 @@ function ExpenseList({ expenses, onDelete }) {
     }
   }
 
-  // If there are no expenses yet, show a friendly message
   if (expenses.length === 0) {
     return <p className="status">No expenses yet. Add one above!</p>;
   }
@@ -46,18 +45,26 @@ function ExpenseList({ expenses, onDelete }) {
             <th>Description</th>
             <th>Amount</th>
             <th>Date</th>
-            <th></th>
+            <th></th>{/* action buttons column */}
           </tr>
         </thead>
         <tbody>
-          {/* For each expense, create one table row.
-              key={exp.id} is required — React uses it to track changes efficiently. */}
           {expenses.map(exp => (
-            <tr key={exp.id}>
+            // className "editing" applies a yellow highlight when this row is being edited.
+            // exp.id === editingId is true for at most one row at a time.
+            <tr key={exp.id} className={exp.id === editingId ? 'editing' : ''}>
               <td>{exp.description}</td>
-              <td>${Number(exp.amount).toFixed(2)}</td>
+              <td className="amount">${Number(exp.amount).toFixed(2)}</td>
               <td>{exp.date}</td>
-              <td>
+              <td className="actions">
+                {/* Disable Edit while a delete is in flight on this row */}
+                <button
+                  className="edit-btn"
+                  onClick={() => onEdit(exp)}
+                  disabled={deleting.has(exp.id)}
+                >
+                  Edit
+                </button>
                 <button
                   className="danger"
                   disabled={deleting.has(exp.id)}

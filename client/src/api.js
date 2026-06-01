@@ -23,6 +23,18 @@ export async function createExpense(expense) {
   return res.json();
 }
 
+// PUT /expenses/:id — updates an existing expense, returns the saved object
+// Same shape as createExpense but method is 'PUT' and the id goes in the URL path
+export async function updateExpense(id, expense) {
+  const res = await fetch(`${BASE_URL}/expenses/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(expense),
+  });
+  if (!res.ok) throw new Error('Failed to update expense');
+  return res.json();
+}
+
 // DELETE /expenses/:id — removes one expense by id
 export async function deleteExpense(id) {
   const res = await fetch(`${BASE_URL}/expenses/${id}`, {
