@@ -234,15 +234,43 @@ button.danger:disabled {
   overflow: hidden;
 }
 
-.list-section > h2 {
+/* Header row: title on the left, Export CSV button on the right */
+.list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid var(--apple-separator);
+}
+
+.list-header h2 {
   font-size: 22px;
   font-weight: 600;
   letter-spacing: -0.3px;
   color: var(--apple-text-primary);
   margin: 0;
-  padding: 20px 20px 16px;
-  border-bottom: 1px solid var(--apple-separator);
   line-height: 1.2;
+}
+
+/* Export CSV — outlined pill, blue text, no fill */
+button.export-btn {
+  background: transparent;
+  color: var(--apple-blue);
+  border: 1.5px solid var(--apple-blue);
+  padding: 5px 14px;
+  font-size: 13px;
+  border-radius: 16px;
+  flex-shrink: 0;
+}
+
+button.export-btn:hover   { opacity: 0.70; }
+button.export-btn:active  { transform: scale(0.97); }
+button.export-btn:disabled {
+  color: var(--apple-text-tertiary);
+  border-color: var(--apple-separator);
+  opacity: 1;
+  cursor: not-allowed;
+  transform: none;
 }
 
 /* ── Table ──────────────────────────────────────── */
@@ -312,6 +340,87 @@ td.actions {
   white-space: nowrap;
   width: 1%;
   padding-right: 16px;
+}
+
+/* ── Plaid section ──────────────────────────────── */
+
+.plaid-section {
+  background: var(--apple-bg-card);
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 4px 16px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+  margin-top: 28px;
+}
+
+.plaid-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid var(--apple-separator);
+}
+
+.plaid-header h2 {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  color: var(--apple-text-primary);
+  margin: 0 0 2px;
+  line-height: 1.2;
+}
+
+.plaid-subtitle {
+  font-size: 13px;
+  color: var(--apple-text-secondary);
+  margin: 0;
+}
+
+/* Connect Bank — filled green pill */
+button.plaid-connect-btn {
+  background: var(--apple-green);
+  color: #FFFFFF;
+  padding: 8px 18px;
+  font-size: 14px;
+  border-radius: 20px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+button.plaid-connect-btn:hover    { opacity: 0.85; }
+button.plaid-connect-btn:disabled { background: var(--apple-fill); color: var(--apple-text-tertiary); opacity: 1; }
+
+/* Connected accounts list */
+.accounts-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.account-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--apple-separator);
+}
+
+.account-item:last-child { border-bottom: none; }
+
+.account-name {
+  font-size: 16px;
+  color: var(--apple-text-primary);
+  font-weight: 500;
+}
+
+.account-badge {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--apple-green);
+  background: rgba(52, 199, 89, 0.10);
+  padding: 3px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.2px;
 }
 
 /* ── Recurring expenses section ─────────────────── */

@@ -45,6 +45,29 @@ db.serialize(() => {
       created_at  TEXT DEFAULT (datetime('now'))
     )
   `);
+
+  // plaid_items — one row per connected bank account.
+  // access_token is the long-lived credential Plaid gives after the user
+  // completes the Link flow; cursor tracks the position in transactionsSync.
+  db.run(`
+    CREATE TABLE IF NOT EXISTS plaid_items (
+      id               INTEGER PRIMARY KEY AUTOINCREMENT,
+      item_id          TEXT NOT NULL UNIQUE,
+      access_token     TEXT NOT NULL,
+      institution_name TEXT,
+      cursor           TEXT,
+      created_at       TEXT DEFAULT (datetime('now'))
+    )
+  `);
+
+  // Migration: add plaid_transaction_id to expenses so webhook-imported
+  // transactions can be de-duplicated. SQLite's ALTER TABLE errors if the
+  // column already exists, so we swallow that specific error.
+  db.run('ALTER TABLE expenses ADD COLUMN plaid_transaction_id TEXT', (err) => {
+    if (err && !err.message.includes('duplicate column name')) {
+      console.error('Migration error:', err.message);
+    }
+  });
 });
 
 module.exports = db;

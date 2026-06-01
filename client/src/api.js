@@ -3,7 +3,7 @@
 
 // Read the API URL from the Vite environment (set VITE_API_URL in client/.env).
 // Falls back to localhost:3000 so local dev works without a .env file.
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+export const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 // GET /expenses — returns an array of all expense objects
 export async function fetchExpenses() {
@@ -49,6 +49,36 @@ export async function deleteExpense(id) {
 export async function fetchCategories() {
   const res = await fetch(`${BASE_URL}/categories`);
   if (!res.ok) throw new Error('Failed to fetch categories');
+  return res.json();
+}
+
+// ── Plaid ────────────────────────────────────────────────────────────────────
+
+// POST /plaid/create-link-token — returns the token that initialises Plaid Link in the browser
+export async function createLinkToken() {
+  const res = await fetch(`${BASE_URL}/plaid/create-link-token`, { method: 'POST' });
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error(body.error || 'Failed to create link token');
+  }
+  return res.json(); // { link_token }
+}
+
+// POST /plaid/exchange-token — sends the one-time public_token; server stores the access_token
+export async function exchangeToken(publicToken, institution) {
+  const res = await fetch(`${BASE_URL}/plaid/exchange-token`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ public_token: publicToken, institution }),
+  });
+  if (!res.ok) throw new Error('Failed to exchange token');
+  return res.json(); // { id, item_id, institution_name, created_at }
+}
+
+// GET /plaid/accounts — lists connected banks (no sensitive fields)
+export async function fetchPlaidAccounts() {
+  const res = await fetch(`${BASE_URL}/plaid/accounts`);
+  if (!res.ok) throw new Error('Failed to fetch connected accounts');
   return res.json();
 }
 
