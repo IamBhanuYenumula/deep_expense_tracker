@@ -234,15 +234,43 @@ button.danger:disabled {
   overflow: hidden;
 }
 
-.list-section > h2 {
+/* Header row: title on the left, Export CSV button on the right */
+.list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid var(--apple-separator);
+}
+
+.list-header h2 {
   font-size: 22px;
   font-weight: 600;
   letter-spacing: -0.3px;
   color: var(--apple-text-primary);
   margin: 0;
-  padding: 20px 20px 16px;
-  border-bottom: 1px solid var(--apple-separator);
   line-height: 1.2;
+}
+
+/* Export CSV — outlined pill, blue text, no fill */
+button.export-btn {
+  background: transparent;
+  color: var(--apple-blue);
+  border: 1.5px solid var(--apple-blue);
+  padding: 5px 14px;
+  font-size: 13px;
+  border-radius: 16px;
+  flex-shrink: 0;
+}
+
+button.export-btn:hover   { opacity: 0.70; }
+button.export-btn:active  { transform: scale(0.97); }
+button.export-btn:disabled {
+  color: var(--apple-text-tertiary);
+  border-color: var(--apple-separator);
+  opacity: 1;
+  cursor: not-allowed;
+  transform: none;
 }
 
 /* ── Table ──────────────────────────────────────── */
