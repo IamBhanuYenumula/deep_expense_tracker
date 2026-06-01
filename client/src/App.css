@@ -314,6 +314,84 @@ td.actions {
   padding-right: 16px;
 }
 
+/* ── Charts section ─────────────────────────────── */
+
+.charts-section {
+  background: var(--apple-bg-card);
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 4px 16px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+  margin-top: 28px;
+}
+
+.charts-section > h2 {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  color: var(--apple-text-primary);
+  margin: 0;
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid var(--apple-separator);
+  line-height: 1.2;
+}
+
+.charts-grid {
+  display: flex;
+}
+
+.chart-card {
+  flex: 1;
+  padding: 20px 20px 16px;
+  min-width: 0; /* prevents flex children from overflowing */
+}
+
+.chart-card + .chart-card {
+  border-left: 1px solid var(--apple-separator);
+}
+
+.chart-card h3 {
+  margin: 0 0 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--apple-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+@media (max-width: 600px) {
+  .charts-grid         { flex-direction: column; }
+  .chart-card + .chart-card {
+    border-left: none;
+    border-top: 1px solid var(--apple-separator);
+  }
+}
+
+/* ── Recharts custom tooltip ────────────────────── */
+
+.chart-tooltip {
+  background: var(--apple-bg-card);
+  border: 1px solid var(--apple-separator);
+  border-radius: 8px;
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.10);
+}
+
+.chart-tooltip-label {
+  font-size: 13px;
+  color: var(--apple-text-secondary);
+}
+
+.chart-tooltip-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--apple-text-primary);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
 /* ── Status / empty states ──────────────────────── */
 
 .status {
