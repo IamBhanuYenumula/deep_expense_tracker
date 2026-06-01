@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { fetchExpenses, fetchCategories } from './api';
 import ExpenseForm from './components/ExpenseForm';
 import ExpenseList from './components/ExpenseList';
+import Charts from './components/Charts';
 import './App.css';
 
 function App() {
@@ -119,6 +120,8 @@ function App() {
             />
           )}
         </section>
+
+        {!loading && !error && <Charts expenses={expenses} />}
       </main>
     </div>
   );
