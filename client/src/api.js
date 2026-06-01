@@ -52,6 +52,54 @@ export async function fetchCategories() {
   return res.json();
 }
 
+// ── Recurring expenses ───────────────────────────────────────────────────────
+
+// GET /recurring — returns all recurring expense templates
+export async function fetchRecurring() {
+  const res = await fetch(`${BASE_URL}/recurring`);
+  if (!res.ok) throw new Error('Failed to fetch recurring expenses');
+  return res.json();
+}
+
+// POST /recurring — creates a recurring template, returns the saved object
+export async function createRecurring(item) {
+  const res = await fetch(`${BASE_URL}/recurring`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(item),
+  });
+  if (!res.ok) throw new Error('Failed to create recurring expense');
+  return res.json();
+}
+
+// PUT /recurring/:id — updates a recurring template, returns the saved object
+export async function updateRecurring(id, item) {
+  const res = await fetch(`${BASE_URL}/recurring/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(item),
+  });
+  if (!res.ok) throw new Error('Failed to update recurring expense');
+  return res.json();
+}
+
+// DELETE /recurring/:id
+export async function deleteRecurring(id) {
+  const res = await fetch(`${BASE_URL}/recurring/${id}`, { method: 'DELETE' });
+  if (!res.ok) throw new Error('Failed to delete recurring expense');
+  return res.status !== 204 ? res.json() : null;
+}
+
+// POST /recurring/:id/log — records an expense for today and advances next_due.
+// Returns { expense, recurring } — both updated rows in one round-trip.
+export async function logRecurring(id) {
+  const res = await fetch(`${BASE_URL}/recurring/${id}/log`, { method: 'POST' });
+  if (!res.ok) throw new Error('Failed to log recurring expense');
+  return res.json();
+}
+
+// ── Categories ───────────────────────────────────────────────────────────────
+
 // POST /categories — creates a new category, returns the saved object (with its new id)
 // Surfaces the server's error message so "already exists" is shown to the user clearly.
 export async function createCategory(name) {
