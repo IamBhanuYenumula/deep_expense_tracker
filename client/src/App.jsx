@@ -3,6 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { fetchExpenses, fetchCategories, fetchRecurring } from './api';
+import { exportToCSV } from './utils/exportCSV';
 import ExpenseForm from './components/ExpenseForm';
 import ExpenseList from './components/ExpenseList';
 import RecurringSection from './components/RecurringSection';
@@ -134,7 +135,16 @@ function App() {
         />
 
         <section className="list-section">
-          <h2>All Expenses</h2>
+          <div className="list-header">
+            <h2>All Expenses</h2>
+            <button
+              className="export-btn"
+              onClick={() => exportToCSV(expenses)}
+              disabled={expenses.length === 0}
+            >
+              Export CSV
+            </button>
+          </div>
 
           {/* Handle the three possible states: loading, error, data */}
           {loading && <p className="status">Loading expenses…</p>}
