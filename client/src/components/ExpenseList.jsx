@@ -54,11 +54,12 @@ function ExpenseList({ expenses, onDelete, onEdit, editingId }) {
             // exp.id === editingId is true for at most one row at a time.
             <tr key={exp.id} className={exp.id === editingId ? 'editing' : ''}>
               <td>{exp.description}</td>
-              <td>${Number(exp.amount).toFixed(2)}</td>
+              <td className="amount">${Number(exp.amount).toFixed(2)}</td>
               <td>{exp.date}</td>
-              <td>
+              <td className="actions">
                 {/* Disable Edit while a delete is in flight on this row */}
                 <button
+                  className="edit-btn"
                   onClick={() => onEdit(exp)}
                   disabled={deleting.has(exp.id)}
                 >

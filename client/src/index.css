@@ -109,3 +109,47 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+
+/* ── Apple Design Override ──────────────────────────────────────────────────
+   These rules cascade after the template tokens above (same specificity,
+   later position wins) so they override without touching the template lines.
+   ────────────────────────────────────────────────────────────────────────── */
+
+:root {
+  --apple-bg-page:        #F2F2F7;
+  --apple-bg-card:        #FFFFFF;
+  --apple-text-primary:   #1C1C1E;
+  --apple-text-secondary: #6E6E73;
+  --apple-text-tertiary:  #AEAEB2;
+  --apple-separator:      #C6C6C8;
+  --apple-fill:           #E5E5EA;
+  --apple-blue:           #007AFF;
+  --apple-red:            #FF3B30;
+  --apple-green:          #34C759;
+
+  --sans:    -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  --heading: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif;
+
+  font: 17px/1.5 var(--sans);
+  letter-spacing: normal;
+  color-scheme: light;
+}
+
+/* Remove the template's narrow column, side borders, and center-align */
+#root {
+  width: 100%;
+  max-width: 100%;
+  border-inline: none;
+  text-align: left;
+  background: var(--apple-bg-page);
+  color: var(--apple-text-primary);
+  color-scheme: light;
+}
+
+/* Reset template h1/h2 overrides — App.css controls heading styles */
+h1, h2 {
+  font-weight: inherit;
+  font-size: inherit;
+  letter-spacing: inherit;
+  margin: inherit;
+}

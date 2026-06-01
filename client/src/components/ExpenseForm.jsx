@@ -103,7 +103,7 @@ function ExpenseForm({ onAdd, editingExpense, onUpdate, onCancelEdit }) {
 
         {/* Cancel only appears in edit mode — clicking it returns to add mode */}
         {isEditing && (
-          <button type="button" onClick={onCancelEdit}>
+          <button type="button" className="cancel" onClick={onCancelEdit}>
             Cancel
           </button>
         )}

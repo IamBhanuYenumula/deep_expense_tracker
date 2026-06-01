@@ -1,132 +1,296 @@
-/* App-level styles for Deep Expense Tracker */
+/* ═══════════════════════════════════════════════════
+   Deep Expense Tracker — Apple Human Interface Style
+   iOS/macOS system colors, SF Pro typography, cards
+   ═══════════════════════════════════════════════════ */
+
+/* ── App wrapper ────────────────────────────────── */
 
 .app {
-  max-width: 800px;
+  max-width: 760px;
   margin: 0 auto;
-  padding: 2rem 1.5rem;
-  font-family: sans-serif;
+  padding: 48px 20px 80px;
+  font-family: var(--sans);
+  color-scheme: light;
 }
 
+/* ── Header ─────────────────────────────────────── */
+
 header {
-  border-bottom: 2px solid #e2e8f0;
-  margin-bottom: 2rem;
-  padding-bottom: 1rem;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: none;
+  margin-bottom: 32px;
+  padding-bottom: 0;
 }
 
 header h1 {
   margin: 0;
-  font-size: 1.75rem;
-  color: #1a202c;
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: var(--apple-text-primary);
+  line-height: 1.1;
 }
 
-/* ── Form section ────────────────────────────── */
+.header-total {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--apple-text-secondary);
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin: 0;
+}
+
+.header-total span {
+  color: var(--apple-green);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+  margin-left: 4px;
+}
+
+/* ── Form card ──────────────────────────────────── */
 
 .form-section {
-  background: #f7fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
+  background: var(--apple-bg-card);
+  border: none;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 28px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 4px 16px rgba(0, 0, 0, 0.06);
 }
 
 .form-section h2 {
-  margin: 0 0 1rem;
-  font-size: 1.1rem;
-  color: #2d3748;
+  margin: 0 0 20px;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  color: var(--apple-text-primary);
+  line-height: 1.2;
 }
 
 form {
   display: flex;
-  gap: 0.75rem;
+  gap: 10px;
   flex-wrap: wrap;
   align-items: flex-end;
 }
 
+/* ── Inputs — filled style (iOS text field look) ── */
+
 input {
-  padding: 0.5rem 0.75rem;
-  border: 1px solid #cbd5e0;
-  border-radius: 6px;
-  font-size: 0.95rem;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 10px;
+  font-size: 17px;
+  font-family: var(--sans);
+  background: var(--apple-bg-page);
+  color: var(--apple-text-primary);
   outline: none;
-  transition: border-color 0.15s;
+  transition: box-shadow 0.15s ease, background 0.15s ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+input::placeholder {
+  color: var(--apple-text-tertiary);
 }
 
 input:focus {
-  border-color: #4299e1;
+  background: #EAEAF0;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.20);
 }
 
-input[type="text"]   { flex: 2; min-width: 140px; }
-input[type="number"] { flex: 1; min-width: 90px; }
-input[type="date"]   { flex: 1; min-width: 120px; }
+input[type="text"]   { flex: 2; min-width: 160px; }
+input[type="number"] { flex: 1; min-width: 100px; }
+input[type="date"]   { flex: 1; min-width: 130px; }
 
-/* ── Buttons ─────────────────────────────────── */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0.4;
+  cursor: pointer;
+}
+
+/* ── Buttons ────────────────────────────────────── */
 
 button {
-  padding: 0.5rem 1.25rem;
+  padding: 10px 22px;
   border: none;
-  border-radius: 6px;
-  font-size: 0.95rem;
+  border-radius: 20px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: var(--sans);
   cursor: pointer;
-  background: #4299e1;
-  color: white;
-  transition: background 0.15s;
+  background: var(--apple-blue);
+  color: #FFFFFF;
+  transition: opacity 0.15s ease, transform 0.1s ease;
+  -webkit-tap-highlight-color: transparent;
+  white-space: nowrap;
+  line-height: 1;
 }
 
-button:hover    { background: #3182ce; }
-button:disabled { background: #a0aec0; cursor: not-allowed; }
+button:hover  { opacity: 0.85; }
+button:active { transform: scale(0.97); }
 
-button.danger       { background: #fc8181; color: #742a2a; padding: 0.3rem 0.75rem; }
-button.danger:hover { background: #f56565; }
-
-/* ── Expense table ───────────────────────────── */
-
-.list-section h2 {
-  font-size: 1.1rem;
-  color: #2d3748;
-  margin-bottom: 0.75rem;
+button:disabled {
+  background: var(--apple-fill);
+  color: var(--apple-text-tertiary);
+  cursor: not-allowed;
+  opacity: 1;
+  transform: none;
 }
+
+/* Cancel — gray filled, dark text */
+button.cancel {
+  background: var(--apple-fill);
+  color: var(--apple-text-primary);
+}
+
+button.cancel:hover { opacity: 0.75; }
+
+/* Edit — blue, smaller pill */
+button.edit-btn {
+  background: var(--apple-blue);
+  color: #FFFFFF;
+  padding: 6px 14px;
+  font-size: 13px;
+  border-radius: 16px;
+  margin-right: 6px;
+}
+
+button.edit-btn:hover { opacity: 0.80; }
+
+button.edit-btn:disabled {
+  background: var(--apple-fill);
+  color: var(--apple-text-tertiary);
+  opacity: 1;
+}
+
+/* Delete — red, smaller pill */
+button.danger {
+  background: var(--apple-red);
+  color: #FFFFFF;
+  padding: 6px 14px;
+  font-size: 13px;
+  border-radius: 16px;
+}
+
+button.danger:hover  { opacity: 0.80; }
+button.danger:active { transform: scale(0.96); }
+
+button.danger:disabled {
+  background: var(--apple-fill);
+  color: var(--apple-text-tertiary);
+  opacity: 1;
+}
+
+/* ── Expense list card ──────────────────────────── */
+
+.list-section {
+  background: var(--apple-bg-card);
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 4px 16px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+.list-section > h2 {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  color: var(--apple-text-primary);
+  margin: 0;
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid var(--apple-separator);
+  line-height: 1.2;
+}
+
+/* ── Table ──────────────────────────────────────── */
 
 table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.95rem;
+  font-size: 17px;
 }
 
 thead tr {
-  background: #edf2f7;
-}
-
-th, td {
-  text-align: left;
-  padding: 0.65rem 0.85rem;
-  border-bottom: 1px solid #e2e8f0;
+  background: transparent;
 }
 
 th {
-  font-weight: 600;
-  color: #4a5568;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+  text-align: left;
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--apple-text-secondary);
+  text-transform: none;
+  letter-spacing: normal;
+  border-bottom: 1px solid var(--apple-separator);
 }
 
+td {
+  text-align: left;
+  padding: 14px 20px;
+  color: var(--apple-text-primary);
+  border-bottom: 1px solid var(--apple-separator);
+  vertical-align: middle;
+}
+
+/* Last data row — no divider; the card edge handles it */
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Row hover — very subtle gray tint */
 tbody tr:hover {
-  background: #f7fafc;
+  background: var(--apple-bg-page);
 }
 
-/* ── Status messages ─────────────────────────── */
+/* Editing row — left blue accent bar (replaces yellow background) */
+tbody tr.editing {
+  background: rgba(0, 122, 255, 0.04);
+  border-left: 3px solid var(--apple-blue);
+}
+
+/* Compensate for the 3px border so text doesn't shift */
+tbody tr.editing td:first-child {
+  padding-left: 17px;
+}
+
+/* Amount — green tabular-nums like Wallet app */
+td.amount {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+  font-family: var(--mono);
+  color: var(--apple-green);
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* Actions column — shrink-wrap to buttons */
+td.actions {
+  white-space: nowrap;
+  width: 1%;
+  padding-right: 16px;
+}
+
+/* ── Status / empty states ──────────────────────── */
 
 .status {
-  color: #718096;
-  font-size: 0.95rem;
-  padding: 0.5rem 0;
+  font-size: 15px;
+  color: var(--apple-text-secondary);
+  text-align: center;
+  padding: 32px 20px;
+  margin: 0;
 }
 
 .status.error {
-  color: #c53030;
+  color: var(--apple-red);
 }
 
-/* Highlight the table row whose data is currently loaded in the edit form */
-tr.editing td {
-  background-color: #fffbea;
+/* Inline error inside the form — left-aligned, smaller */
+.form-section .status {
+  text-align: left;
+  padding: 8px 0 0;
+  font-size: 13px;
 }

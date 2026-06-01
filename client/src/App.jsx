@@ -72,10 +72,13 @@ function App() {
   }
 
   // --- Render ---
+  const total = expenses.reduce((sum, e) => sum + Number(e.amount), 0);
+
   return (
     <div className="app">
       <header>
         <h1>Deep Expense Tracker</h1>
+        <p className="header-total">Total <span>${total.toFixed(2)}</span></p>
       </header>
 
       <main>
